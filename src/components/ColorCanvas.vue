@@ -1,24 +1,25 @@
 <template></template>
 
 <script setup>
-import { ref, onMounted } from "vue";
+import { ref, onMounted, onUnmounted } from "vue";
 import * as PIXI from "pixi.js";
 
 const props = defineProps({
   colors: Array,
 });
 
-onMounted(() => {
-  const app = new PIXI.Application({
-    width: 1210,
-    height: 610,
-    backgroundColor: 0xffffff,
-  });
+const app = ref(null);
+app.value = new PIXI.Application({
+  width: 1210,
+  height: 610,
+  backgroundColor: 0xffffff,
+});
 
+onMounted(() => {
   const gridContainer = new PIXI.Container();
   gridContainer.position.set(5, 5);
   gridContainer.renderable = true;
-  app.stage.addChild(gridContainer);
+  app.value.stage.addChild(gridContainer);
 
   const cellWidth = 20;
   const cellHeight = 20;
@@ -63,7 +64,11 @@ onMounted(() => {
     }
   }
 
-  document.body.appendChild(app.view);
+  document.body.appendChild(app.value.view);
+});
+
+onUnmounted(() => {
+  app.value.destroy();
 });
 </script>
 
