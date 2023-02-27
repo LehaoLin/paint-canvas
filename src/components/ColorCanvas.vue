@@ -9,13 +9,13 @@ const props = defineProps({
 });
 
 const app = ref(null);
-app.value = new PIXI.Application({
-  width: 1210,
-  height: 610,
-  backgroundColor: 0xffffff,
-});
 
 onMounted(() => {
+  app.value = new PIXI.Application({
+    width: 1210,
+    height: 610,
+    backgroundColor: 0xffffff,
+  });
   const gridContainer = new PIXI.Container();
   gridContainer.position.set(5, 5);
   gridContainer.renderable = true;
