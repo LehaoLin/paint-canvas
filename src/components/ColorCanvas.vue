@@ -22,7 +22,15 @@ onMounted(() => {
   });
 
   // define the color list
-  var colorList = props.colors;
+  const colorList = props.colors;
+  console.log(colorList);
+  var uu = 0;
+  while (uu < 1800) {
+    if (!colorList[uu]) {
+      colorList.push("#ffffff");
+    }
+    uu += 1;
+  }
   console.log(colorList);
 
   // create a layer to hold the grid
@@ -60,8 +68,25 @@ onMounted(() => {
         let col_index = (this.attrs.x + 20) / 20;
         let row_index = (this.attrs.y + 20) / 20;
         console.log("Cell clicked:", col_index, row_index);
-        emit("paint", { col_index, row_index });
+        let temp_color = colorList[(row_index - 1) * 30 + col_index - 1];
+        console.log("color", temp_color);
+        if (temp_color == "#ffffff") {
+          emit("paint", { col_index, row_index, status: "available" });
+        } else {
+          emit("paint", { col_index, row_index, status: "unavailable" });
+        }
       });
+
+      // rect.on("mouseover", function () {
+      //   this.fill("gray");
+      //   console.log("okk");
+      //   layer.draw();
+      // });
+
+      // rect.on("mouseout", function () {
+      //   this.fill("#ffffff");
+      //   layer.draw();
+      // });
 
       // add the rectangle to the layer
       layer.add(rect);
