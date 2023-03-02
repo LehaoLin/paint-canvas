@@ -1,74 +1,75 @@
-<template></template>
+<template>
+  <div id="container"></div>
+</template>
 
 <script setup>
 import { ref, onMounted, onUnmounted } from "vue";
-import * as PIXI from "pixi.js";
+
+import Konva from "konva";
 
 const props = defineProps({
   colors: Array,
 });
 
-const app = ref(null);
+const emit = defineEmits(["paint"]);
 
 onMounted(() => {
-  app.value = new PIXI.Application({
-    width: 1210,
-    height: 610,
-    backgroundColor: 0xffffff,
+  // create a stage with the specified width and height
+  var stage = new Konva.Stage({
+    container: "container",
+    width: 1200,
+    height: 600,
   });
-  const gridContainer = new PIXI.Container();
-  gridContainer.position.set(5, 5);
-  gridContainer.renderable = true;
-  app.value.stage.addChild(gridContainer);
 
-  const cellWidth = 20;
-  const cellHeight = 20;
-  const borderWidth = 1;
-  const gridColor = 0xcccccc;
-  const outerBorderColor = 0x000000; // set the color of the outer border separately
+  // define the color list
+  var colorList = props.colors;
+  console.log(colorList);
 
-  // draw the outer border
-  const outerBorder = new PIXI.Graphics();
-  outerBorder.lineStyle(borderWidth * 2, outerBorderColor); // multiply the borderWidth by 2 to make it thicker
-  outerBorder.drawRect(0, 0, 60 * cellWidth, 30 * cellHeight);
-  gridContainer.addChild(outerBorder);
+  // create a layer to hold the grid
+  var layer = new Konva.Layer();
 
-  for (let i = 0; i < 60; i++) {
-    for (let j = 0; j < 30; j++) {
-      const cell = new PIXI.Graphics();
-      cell.lineStyle(borderWidth, 0xffffff);
-      // cell.beginFill(0x000000);
-      const colorIndex = i * 60 + j;
+  // calculate the size of each cell
+  var cellWidth = stage.width() / 60;
+  var cellHeight = stage.height() / 30;
+
+  // loop through each row and column to create the cells
+  for (var row = 0; row < 30; row++) {
+    for (var col = 0; col < 60; col++) {
+      // calculate the color index based on the row and column
+      // var colorIndex = (row + col) % colorList.length;
+      var colorIndex = row * 30 + col;
+      var color = "";
       try {
-        cell.beginFill(props.colors[colorIndex]);
+        color = colorList[colorIndex];
       } catch {
-        cell.beginFill(0xffffff);
+        color = "#ffffff";
       }
-      cell.drawRect(i * cellWidth, j * cellHeight, cellWidth, cellHeight);
-      cell.endFill();
-      gridContainer.addChild(cell);
 
-      if (i === 0 || j === 0) {
-        const line = new PIXI.Graphics();
-        line.lineStyle(borderWidth, gridColor);
-        if (i === 0) {
-          line.moveTo(0, j * cellHeight);
-          line.lineTo(60 * cellWidth, j * cellHeight);
-        }
-        if (j === 0) {
-          line.moveTo(i * cellWidth, 0);
-          line.lineTo(i * cellWidth, 30 * cellHeight);
-        }
-        gridContainer.addChild(line);
-      }
+      // create a rectangle shape for each cell with the specified color
+      var rect = new Konva.Rect({
+        x: col * cellWidth,
+        y: row * cellHeight,
+        width: cellWidth,
+        height: cellHeight,
+        fill: color,
+        stroke: "black",
+        strokeWidth: 1,
+      });
+
+      rect.on("click", function () {
+        let col_index = (this.attrs.x + 20) / 20;
+        let row_index = (this.attrs.y + 20) / 20;
+        console.log("Cell clicked:", col_index, row_index);
+        emit("paint", { col_index, row_index });
+      });
+
+      // add the rectangle to the layer
+      layer.add(rect);
     }
   }
 
-  document.body.appendChild(app.value.view);
-});
-
-onUnmounted(() => {
-  app.value.destroy();
+  // add the layer to the stage
+  stage.add(layer);
 });
 </script>
 

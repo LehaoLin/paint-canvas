@@ -1,5 +1,8 @@
 <script setup>
 import ColorCanvas from "./components/ColorCanvas.vue";
+const test = (payload) => {
+  console.log(payload);
+};
 </script>
 
 <template>
@@ -12,12 +15,8 @@ import ColorCanvas from "./components/ColorCanvas.vue";
     </a>
   </div> -->
   <ColorCanvas
-    :colors="[
-      0xff0000, // red
-      0x00ff00, // green
-      0x0000ff, // blue
-      0x0000ff,
-    ]"
+    :colors="['#ff0000', '#00ff00', '#0000ff', '#ffff00', '#00ffff', '#00ffff']"
+    @paint="test"
   />
 </template>
 
