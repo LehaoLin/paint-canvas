@@ -1,7 +1,17 @@
 <script setup>
 import ColorCanvas from "./components/ColorCanvas.vue";
+import { ref } from "vue";
+const colors = ref([
+  "#ff0000",
+  "#00ff00",
+  "#0000ff",
+  "#ffff00",
+  "#00ffff",
+  "#00ffff",
+]);
 const test = (payload) => {
   console.log(payload);
+  colors.value = ["#ff0000", "#00ff00"];
 };
 </script>
 
@@ -14,10 +24,7 @@ const test = (payload) => {
       <img src="./assets/vue.svg" class="logo vue" alt="Vue logo" />
     </a>
   </div> -->
-  <ColorCanvas
-    :colors="['#ff0000', '#00ff00', '#0000ff', '#ffff00', '#00ffff', '#00ffff']"
-    @paint="test"
-  />
+  <ColorCanvas :colors="colors" @paint="test" />
 </template>
 
 <style scoped>

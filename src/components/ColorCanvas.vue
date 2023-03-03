@@ -3,7 +3,7 @@
 </template>
 
 <script setup>
-import { ref, onMounted, onUnmounted } from "vue";
+import { ref, onMounted, computed } from "vue";
 
 import Konva from "konva";
 
@@ -13,9 +13,12 @@ const props = defineProps({
 
 const emit = defineEmits(["paint"]);
 
+const stage = ref();
+const layer = ref();
+
 onMounted(() => {
   // create a stage with the specified width and height
-  var stage = new Konva.Stage({
+  stage.value = new Konva.Stage({
     container: "container",
     width: 1200,
     height: 600,
@@ -23,7 +26,8 @@ onMounted(() => {
 
   // define the color list
   const colorList = props.colors;
-  console.log(colorList);
+  // console.log(colorList);
+
   var uu = 0;
   while (uu < 1800) {
     if (!colorList[uu]) {
@@ -31,14 +35,13 @@ onMounted(() => {
     }
     uu += 1;
   }
-  console.log(colorList);
 
   // create a layer to hold the grid
-  var layer = new Konva.Layer();
+  layer.value = new Konva.Layer();
 
   // calculate the size of each cell
-  var cellWidth = stage.width() / 60;
-  var cellHeight = stage.height() / 30;
+  var cellWidth = stage.value.width() / 60;
+  var cellHeight = stage.value.height() / 30;
 
   // loop through each row and column to create the cells
   for (var row = 0; row < 30; row++) {
@@ -89,12 +92,12 @@ onMounted(() => {
       // });
 
       // add the rectangle to the layer
-      layer.add(rect);
+      layer.value.add(rect);
     }
   }
 
   // add the layer to the stage
-  stage.add(layer);
+  stage.value.add(layer.value);
 });
 </script>
 
