@@ -3,7 +3,7 @@
 </template>
 
 <script setup>
-import { ref, onMounted, computed } from "vue";
+import { ref, onMounted, onUnmounted, computed } from "vue";
 
 import Konva from "konva";
 
@@ -18,6 +18,7 @@ const layer = ref();
 
 onMounted(() => {
   // create a stage with the specified width and height
+  Konva.autoDrawEnabled = false;
   stage.value = new Konva.Stage({
     container: "container",
     width: 1200,
@@ -80,16 +81,19 @@ onMounted(() => {
         }
       });
 
-      // rect.on("mouseover", function () {
-      //   this.fill("gray");
-      //   console.log("okk");
-      //   layer.draw();
-      // });
+      rect.on("mouseover", function (evt) {
+        var box = evt.target;
+        box.fill("gray");
+        document.body.style.cursor = "pointer";
+        box.draw();
+      });
 
-      // rect.on("mouseout", function () {
-      //   this.fill("#ffffff");
-      //   layer.draw();
-      // });
+      rect.on("mouseout", function (evt) {
+        var box = evt.target;
+        box.fill("#ffffff");
+        document.body.style.cursor = "default";
+        box.draw();
+      });
 
       // add the rectangle to the layer
       layer.value.add(rect);
