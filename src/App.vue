@@ -4,6 +4,7 @@ import { ref } from "vue";
 
 const row_clicked = ref(0);
 const col_clicked = ref(0);
+const status = ref("");
 const colors = ref([
   "#ff0000",
   "#00ff00",
@@ -17,6 +18,7 @@ const test = (payload) => {
   colors.value = ["#ff0000", "#00ff00"];
   col_clicked.value = payload.col_index;
   row_clicked.value = payload.row_index;
+  status.value = payload.status;
 };
 </script>
 
@@ -29,7 +31,7 @@ const test = (payload) => {
       <img src="./assets/vue.svg" class="logo vue" alt="Vue logo" />
     </a>
   </div> -->
-  <p>Col:{{ col_clicked }}, Row:{{ row_clicked }} clicked</p>
+  <p>Col:{{ col_clicked }}, Row:{{ row_clicked }} clicked, {{ status }}</p>
   <ColorCanvas :colors="colors" @paint="test" />
 </template>
 
