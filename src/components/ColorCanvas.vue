@@ -90,7 +90,11 @@ onMounted(() => {
 
       rect.on("mouseout", function (evt) {
         var box = evt.target;
-        box.fill("#ffffff");
+        let col_index = (this.attrs.x + 20) / 20;
+        let row_index = (this.attrs.y + 20) / 20;
+        // console.log("Cell clicked:", col_index, row_index);
+        let temp_color = colorList[(row_index - 1) * 30 + col_index - 1];
+        box.fill(temp_color);
         document.body.style.cursor = "default";
         box.draw();
       });
