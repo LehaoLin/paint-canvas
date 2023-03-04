@@ -1,3 +1,23 @@
+<template>
+  <div v-if="row_clicked != 0 && col_clicked != 0">
+    <button
+      style="background-color: #ff0000"
+      @click="set_color('#ff0000', row_clicked, col_clicked)"
+    ></button>
+    <button
+      style="background-color: #00ff00"
+      @click="set_color('#00ff00', row_clicked, col_clicked)"
+    ></button>
+    <button
+      style="background-color: #0000ff"
+      @click="set_color('#0000ff', row_clicked, col_clicked)"
+    ></button>
+  </div>
+
+  <p>Col:{{ col_clicked }}, Row:{{ row_clicked }} clicked, {{ status }}</p>
+  <ColorCanvas :colors="colors" :paint="paint" @select="select" />
+</template>
+
 <script setup>
 import ColorCanvas from "./components/ColorCanvas.vue";
 import { ref } from "vue";
@@ -13,27 +33,21 @@ const colors = ref([
   "#00ffff",
   "#00ffff",
 ]);
-const test = (payload) => {
+
+// if you want to paint one cell, please change the paint value
+const paint = ref({});
+
+const select = (payload) => {
   console.log(payload);
-  colors.value = ["#ff0000", "#00ff00"];
   col_clicked.value = payload.col_index;
   row_clicked.value = payload.row_index;
   status.value = payload.status;
 };
+const set_color = (color, row_index, col_index) => {
+  console.log(row_clicked, col_clicked);
+  paint.value = { color, row_index, col_index };
+};
 </script>
-
-<template>
-  <!-- <div>
-    <a href="https://vitejs.dev" target="_blank">
-      <img src="/vite.svg" class="logo" alt="Vite logo" />
-    </a>
-    <a href="https://vuejs.org/" target="_blank">
-      <img src="./assets/vue.svg" class="logo vue" alt="Vue logo" />
-    </a>
-  </div> -->
-  <p>Col:{{ col_clicked }}, Row:{{ row_clicked }} clicked, {{ status }}</p>
-  <ColorCanvas :colors="colors" @paint="test" />
-</template>
 
 <style scoped>
 .logo {

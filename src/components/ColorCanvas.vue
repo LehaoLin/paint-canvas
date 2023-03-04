@@ -1,6 +1,5 @@
 <template>
   <div id="container"></div>
-  {{ colors }}
 </template>
 
 <script setup>
@@ -10,11 +9,13 @@ import Konva from "konva";
 
 const props = defineProps({
   colors: Array,
+  paint: Object,
 });
 
 const colors = toRef(props, "colors");
+const paint = toRef(props, "paint");
 
-const emit = defineEmits(["paint"]);
+const emit = defineEmits(["select"]);
 
 const stage = ref();
 const layer = ref();
@@ -52,7 +53,6 @@ const draw = () => {
   for (var row = 0; row < 30; row++) {
     for (var col = 0; col < 60; col++) {
       // calculate the color index based on the row and column
-      // var colorIndex = (row + col) % colorList.length;
       var colorIndex = row * 30 + col;
       var color = "";
       try {
@@ -79,9 +79,9 @@ const draw = () => {
         let temp_color = colorList[(row_index - 1) * 30 + col_index - 1];
         // console.log("color", temp_color);
         if (temp_color == "#ffffff") {
-          emit("paint", { col_index, row_index, status: "available" });
+          emit("select", { col_index, row_index, status: "available" });
         } else {
-          emit("paint", { col_index, row_index, status: "unavailable" });
+          emit("select", { col_index, row_index, status: "unavailable" });
         }
       });
 
@@ -111,14 +111,30 @@ const draw = () => {
   stage.value.add(layer.value);
 };
 
+const paint_cell = () => {
+  let color = paint.value.color;
+  let row_index = paint.value.row_index;
+  let col_index = paint.value.col_index;
+  let cell = layer.value.children[(row_index - 1) * 60 + col_index - 1];
+  cell.fill(color);
+  cell.draw();
+};
+
 onMounted(() => {
   draw();
 });
 
-watch(colors, (newVal, oldVal) => {
-  console.log("colors changed", newVal, oldVal);
-  draw();
-});
+watch(
+  paint,
+  (newVal, oldVal) => {
+    console.log("paint");
+    console.log(newVal);
+    if (newVal) {
+      paint_cell(newVal.color, newVal.row_index, newVal.col_index);
+    }
+  },
+  { deep: true }
+);
 </script>
 
 <style scoped>
