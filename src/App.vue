@@ -24,7 +24,9 @@ import { ref } from "vue";
 
 const row_clicked = ref(0);
 const col_clicked = ref(0);
+// available or unavailable
 const status = ref("");
+// from left to right
 const colors = ref([
   "#ff0000",
   "#00ff00",
