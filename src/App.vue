@@ -3,7 +3,7 @@
     <span v-for="(color, index) in prepared_colors">
       <button
         :style="{ 'background-color': color }"
-        @click="set_color(color, row_clicked, col_clicked)"
+        @click="set_color(color, row_clicked, col_clicked, status)"
       ></button>
     </span>
   </div>
@@ -44,9 +44,10 @@ const select = (payload) => {
   row_clicked.value = payload.row_index;
   status.value = payload.status;
 };
-const set_color = (color, row_index, col_index) => {
-  console.log(row_clicked, col_clicked);
-  paint.value = { color, row_index, col_index };
+const set_color = (color, row_index, col_index, status) => {
+  if (status == "avaiable") {
+    paint.value = { color, row_index, col_index };
+  }
 };
 </script>
 
