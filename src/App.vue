@@ -45,7 +45,7 @@ const select = (payload) => {
   status.value = payload.status;
 };
 const set_color = (color, row_index, col_index, status) => {
-  if (status == "avaiable") {
+  if (status == "available") {
     paint.value = { color, row_index, col_index };
   }
 };
