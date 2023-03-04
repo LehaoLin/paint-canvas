@@ -1,9 +1,10 @@
 <template>
   <div id="container"></div>
+  {{ colors }}
 </template>
 
 <script setup>
-import { ref, onMounted, onUnmounted, computed } from "vue";
+import { ref, onMounted, onUnmounted, computed, watch, toRef } from "vue";
 
 import Konva from "konva";
 
@@ -11,12 +12,14 @@ const props = defineProps({
   colors: Array,
 });
 
+const colors = toRef(props, "colors");
+
 const emit = defineEmits(["paint"]);
 
 const stage = ref();
 const layer = ref();
 
-onMounted(() => {
+const draw = () => {
   // create a stage with the specified width and height
   Konva.autoDrawEnabled = false;
   stage.value = new Konva.Stage({
@@ -26,7 +29,8 @@ onMounted(() => {
   });
 
   // define the color list
-  const colorList = props.colors;
+  // const colorList = props.colors;
+  const colorList = colors.value;
   // console.log(colorList);
 
   var uu = 0;
@@ -92,7 +96,6 @@ onMounted(() => {
         var box = evt.target;
         let col_index = (this.attrs.x + 20) / 20;
         let row_index = (this.attrs.y + 20) / 20;
-        // console.log("Cell clicked:", col_index, row_index);
         let temp_color = colorList[(row_index - 1) * 30 + col_index - 1];
         box.fill(temp_color);
         document.body.style.cursor = "default";
@@ -106,6 +109,15 @@ onMounted(() => {
 
   // add the layer to the stage
   stage.value.add(layer.value);
+};
+
+onMounted(() => {
+  draw();
+});
+
+watch(colors, (newVal, oldVal) => {
+  console.log("colors changed", newVal, oldVal);
+  draw();
 });
 </script>
 
