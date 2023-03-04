@@ -1,17 +1,11 @@
 <template>
   <div v-if="row_clicked != 0 && col_clicked != 0">
-    <button
-      style="background-color: #ff0000"
-      @click="set_color('#ff0000', row_clicked, col_clicked)"
-    ></button>
-    <button
-      style="background-color: #00ff00"
-      @click="set_color('#00ff00', row_clicked, col_clicked)"
-    ></button>
-    <button
-      style="background-color: #0000ff"
-      @click="set_color('#0000ff', row_clicked, col_clicked)"
-    ></button>
+    <span v-for="(color, index) in prepared_colors">
+      <button
+        :style="{ 'background-color': color }"
+        @click="set_color(color, row_clicked, col_clicked)"
+      ></button>
+    </span>
   </div>
 
   <p>Col:{{ col_clicked }}, Row:{{ row_clicked }} clicked, {{ status }}</p>
@@ -26,15 +20,20 @@ const row_clicked = ref(0);
 const col_clicked = ref(0);
 // available or unavailable
 const status = ref("");
-// from left to right
-const colors = ref([
-  "#ff0000",
-  "#00ff00",
-  "#0000ff",
-  "#ffff00",
-  "#00ffff",
-  "#00ffff",
-]);
+// from left to right, colors from smart contract, if no color please fill #ffffff(white)
+const colors = ref([]);
+const prepared_colors = [
+  "#d24430",
+  "#da6959",
+  "#e58c84",
+  "#ebb4ad",
+  "#f5d9d6",
+  "#4574e6",
+  "#688fea",
+  "#8da9f2",
+  "#b3c3f4",
+  "#d4ddfa",
+];
 
 // if you want to paint one cell, please change the paint value
 const paint = ref({});

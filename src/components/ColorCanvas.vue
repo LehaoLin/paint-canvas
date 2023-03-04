@@ -29,15 +29,10 @@ const draw = () => {
     height: 600,
   });
 
-  // define the color list
-  // const colorList = props.colors;
-  const colorList = colors.value;
-  // console.log(colorList);
-
   var uu = 0;
   while (uu < 1800) {
-    if (!colorList[uu]) {
-      colorList.push("#ffffff");
+    if (!colors.value[uu]) {
+      colors.value.push("#ffffff");
     }
     uu += 1;
   }
@@ -53,10 +48,10 @@ const draw = () => {
   for (var row = 0; row < 30; row++) {
     for (var col = 0; col < 60; col++) {
       // calculate the color index based on the row and column
-      var colorIndex = row * 30 + col;
+      var colorIndex = row * 60 + col;
       var color = "";
       try {
-        color = colorList[colorIndex];
+        color = colors.value[colorIndex];
       } catch {
         color = "#ffffff";
       }
@@ -68,7 +63,7 @@ const draw = () => {
         width: cellWidth,
         height: cellHeight,
         fill: color,
-        stroke: "black",
+        stroke: "#838181",
         strokeWidth: 1,
       });
 
@@ -76,8 +71,7 @@ const draw = () => {
         let col_index = (this.attrs.x + 20) / 20;
         let row_index = (this.attrs.y + 20) / 20;
         // console.log("Cell clicked:", col_index, row_index);
-        let temp_color = colorList[(row_index - 1) * 30 + col_index - 1];
-        // console.log("color", temp_color);
+        let temp_color = colors.value[(row_index - 1) * 60 + col_index - 1];
         if (temp_color == "#ffffff") {
           emit("select", { col_index, row_index, status: "available" });
         } else {
@@ -96,7 +90,7 @@ const draw = () => {
         var box = evt.target;
         let col_index = (this.attrs.x + 20) / 20;
         let row_index = (this.attrs.y + 20) / 20;
-        let temp_color = colorList[(row_index - 1) * 30 + col_index - 1];
+        let temp_color = colors.value[(row_index - 1) * 60 + col_index - 1];
         box.fill(temp_color);
         document.body.style.cursor = "default";
         box.draw();
@@ -118,6 +112,7 @@ const paint_cell = () => {
   let cell = layer.value.children[(row_index - 1) * 60 + col_index - 1];
   cell.fill(color);
   cell.draw();
+  colors.value.splice((row_index - 1) * 60 + col_index - 1, 1, color);
 };
 
 onMounted(() => {
@@ -127,8 +122,6 @@ onMounted(() => {
 watch(
   paint,
   (newVal, oldVal) => {
-    console.log("paint");
-    console.log(newVal);
     if (newVal) {
       paint_cell(newVal.color, newVal.row_index, newVal.col_index);
     }
