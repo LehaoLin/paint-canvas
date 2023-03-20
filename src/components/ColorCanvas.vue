@@ -128,6 +128,16 @@ watch(
   },
   { deep: true }
 );
+
+watch(
+  colors,
+  (newVal, oldVal) => {
+    if (newVal) {
+      draw();
+    }
+  },
+  { deep: true }
+);
 </script>
 
 <style scoped>
